@@ -191,7 +191,7 @@ impl ToString for Branch {
                 false => x.predicate.char().to_string(),
             }
         }).collect::<Vec<String>>().join(" ");
-        format!("({}) ({})", stack, predicates)
+        format!("[  {}  ] ({})", stack, predicates)
     }
 }
 
@@ -223,7 +223,7 @@ pub fn analyse(mut branch: Branch, i: usize) {
         Model::NotExists => {},
         Model::Exist(table) => {
             let result = table.iter().map(|(x, y)| format!("{}={}", x, !y)).collect::<Vec<String>>().join(" ");
-            println!("{}{}", "   ".repeat(i), result);
+            println!("#{}{}", "   ".repeat(i), result);
         },
     }
 }
