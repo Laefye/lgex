@@ -91,6 +91,9 @@ impl Branch {
                                             Operator::Not => {
                                                 self.memory.stack.push(uno.unit())
                                             },
+                                            Operator::Empty => {
+                                                self.memory.stack.push(uno.unit())
+                                            }
                                             _ => {}
                                         }
                                         self.remove_unit(unit);
@@ -124,6 +127,10 @@ impl Branch {
                                     },
                                 }
                             },
+                            Operator::Empty => {
+                                self.memory.stack.push(uno.unit());
+                                self.remove_unit(unit);
+                            }
                             _ => {},
                         }
                     },
@@ -206,24 +213,21 @@ impl From<Rc<Unit>> for Branch {
     }
 }
 
-pub fn analyse(mut branch: Branch, i: usize) {
-    println!("{}{}", "   ".repeat(i), branch.to_string());
+pub fn analyse(mut branch: Branch, i: usize, models: &mut Vec<Model>) {
     while branch.has() {
         let result = branch.step();
         match result {
             TreeResult::Continue() => {},
             TreeResult::Born(branch) => {
-                analyse(branch, i + 1);
+                analyse(branch, i + 1, models);
             },
         };
-        println!("{}{}", "   ".repeat(i), branch.to_string());
     }
     let vars = branch.model();
-    match vars {
+    match vars.clone() {
         Model::NotExists => {},
-        Model::Exist(table) => {
-            let result = table.iter().map(|(x, y)| format!("{}={}", x, !y)).collect::<Vec<String>>().join(" ");
-            println!("#{}{}", "   ".repeat(i), result);
+        Model::Exist(_) => {
+            models.push(vars.clone())
         },
     }
 }

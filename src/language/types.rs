@@ -2,6 +2,7 @@ use std::rc::Rc;
 
 #[derive(Clone)]
 pub enum Operator {
+    Empty,
     Not,
     And,
     Or,
@@ -11,10 +12,11 @@ pub enum Operator {
 impl ToString for Operator {
     fn to_string(&self) -> String {
         match self {
-            Operator::Not => "~",
-            Operator::And => "*",
-            Operator::Or => "+",
-            Operator::Implies => ">",
+            Operator::Not => "¬",
+            Operator::And => "∧",
+            Operator::Or => "∨",
+            Operator::Implies => "→",
+            Operator::Empty => "",
         }.to_string()
     }
 }
@@ -92,6 +94,7 @@ impl Unit {
                     Operator::And => 1,
                     Operator::Or => 2,
                     Operator::Implies => 0,
+                    Operator::Empty => 3,
                 }
             },
         }
